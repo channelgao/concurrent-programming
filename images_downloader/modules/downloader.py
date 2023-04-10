@@ -13,7 +13,7 @@ from PIL import ImageFile
 from tqdm import tqdm
 
 from images_downloader.modules.base import BaseModule
-from images_downloader.modules import thread_pool_executor
+from images_downloader.modules import thread_pool_executor, process_pool_executor
 
 
 class Downloader(BaseModule):
@@ -61,7 +61,18 @@ class Downloader(BaseModule):
 
     def _process_multiprocess(self, list_):
         # 单进程运行
-        pass
+        response_list = []
+        task_list = []
+        print('\n多进程图片下载中：')
+        for url in list_:
+            # 多进程加载任务
+            task = process_pool_executor.submit(self._process, url)
+            task_list.append(task)
+        for task in tqdm(task_list):
+            # 获取函数返回值
+            img = task.result()
+            response_list.append(img)
+        return response_list
 
     def _process_coroutine(self, list_):
         # 协程运行

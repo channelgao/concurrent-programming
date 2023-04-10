@@ -13,7 +13,7 @@ from PIL import Image
 from tqdm import tqdm
 
 from images_downloader.modules.base import BaseModule
-from images_downloader.modules import thread_pool_executor
+from images_downloader.modules import thread_pool_executor, process_pool_executor
 
 
 class Hasher(BaseModule):
@@ -59,7 +59,17 @@ class Hasher(BaseModule):
 
     def _process_multiprocess(self, list_):
         # 单进程运行
-        pass
+        md5_list = []
+        task_list = []
+        print('\n多进程图片处理中：')
+        for img in list_:
+            # 多进程加载任务
+            task = process_pool_executor.submit(self._process, img)
+            task_list.append(task)
+        for task in tqdm(task_list):
+            md5 = task.result()
+            md5_list.append(md5)
+        return md5_list
 
     def _process_coroutine(self, list_):
         # 协程运行

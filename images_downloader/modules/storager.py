@@ -11,7 +11,7 @@ from PIL import Image
 from tqdm import tqdm
 
 from images_downloader.modules.base import BaseModule
-from images_downloader.modules import thread_pool_executor
+from images_downloader.modules import thread_pool_executor, process_pool_executor
 
 
 class Storager(BaseModule):
@@ -45,7 +45,12 @@ class Storager(BaseModule):
 
     def _process_multiprocess(self, list_):
         # 单进程运行
-        pass
+        task_list = []
+        print('\n多进程图片保存中')
+        for item in tqdm(list_):
+            task_list.append(process_pool_executor.submit(self._process, item))
+        for task in task_list:
+            task.result()
 
     def _process_coroutine(self, list_):
         # 协程运行

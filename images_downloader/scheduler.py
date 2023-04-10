@@ -52,9 +52,11 @@ class Scheduler(object):
 
     def set_calc_type(self, type_):
         # 设置计算类型
-        self.downloader.set_calc_type(type_)
-        self.hasher.set_calc_type(type_)
-        self.storager.set_calc_type(type_)
+        if len(type_) < 3:
+            type_ = [type_[0]] * 3
+        self.downloader.set_calc_type(type_[0])
+        self.hasher.set_calc_type(type_[1])
+        self.storager.set_calc_type(type_[2])
 
     def process(self):
         # 调度逻辑
@@ -120,13 +122,19 @@ if __name__ == '__main__':
     scheduler = Scheduler(image_url_path='image_list/baidu', save_path='images')
     # 单线程测试
     # 设置程序运行逻辑
-    scheduler.set_calc_type(CalcType.SingleThread)
+    scheduler.set_calc_type([CalcType.SingleThread])
     # 调度开始
     log_list.append(scheduler.process())
 
     # 多线程测试
     # 设置程序运行逻辑
-    scheduler.set_calc_type(CalcType.MultiThread)
+    scheduler.set_calc_type([CalcType.MultiThread] * 3)
+    # 调度开始
+    log_list.append(scheduler.process())
+
+    # 多进程测试
+    # 设置程序运行逻辑
+    scheduler.set_calc_type([CalcType.MultiProcess] * 3)
     # 调度开始
     log_list.append(scheduler.process())
 

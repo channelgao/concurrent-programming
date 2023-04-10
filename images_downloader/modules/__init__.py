@@ -7,8 +7,9 @@ coding:utf-8
 @Email : 
 @description : 
 """
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 
 from images_downloader.config import settings
 
 thread_pool_executor = ThreadPoolExecutor(max_workers=settings.THREAD_MULTI_NUMS)
+process_pool_executor = ProcessPoolExecutor(max_workers=settings.PROCESS_MULTI_NUMS)

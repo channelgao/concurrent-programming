@@ -8,4 +8,4 @@ coding:utf-8
 @description : 
 """
 THREAD_MULTI_NUMS = 10
-PROCESS_MULTI_NUMS = 4
+PROCESS_MULTI_NUMS = 10
